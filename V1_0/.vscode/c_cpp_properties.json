@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "E:\\VSCode-WorkSpace\\V1_0\\Inc",
+                "E:\\VSCode-WorkSpace\\V1_0\\Drivers\\STM32F0xx_HAL_Driver\\Inc",
+                "E:\\VSCode-WorkSpace\\V1_0\\Drivers\\STM32F0xx_HAL_Driver\\Inc\\Legacy",
+                "E:\\VSCode-WorkSpace\\V1_0\\Drivers\\CMSIS\\Include",
+                "E:\\VSCode-WorkSpace\\V1_0\\Drivers\\CMSIS\\Device\\ST\\STM32F0xx\\Include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "__CC_ARM",
+                "_UNICODE"
+            ],
+            "compilerPath": "",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
