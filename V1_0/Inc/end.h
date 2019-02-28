@@ -28,6 +28,7 @@ void Send_Data(uint8_t data_type);
 void Hand_Recbuf(uint8_t *rec);
 void Write_Pwm(void);
 uint8_t MacCmp(uint8_t *rec);
-
+void Key_Scan(void);
+void delay_ms(int time);
 
 #endif

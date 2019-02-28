@@ -4,6 +4,7 @@
 #include "usart.h"
 End_Device end1;
 uint8_t end_mac[8] = {0XAD, 0X39, 0XA5, 0X1A, 0X00, 0X4B, 0X12, 0X00};
+uint8_t key_flag;
 void Init_Device()
 {
   uint32_t end_data = END_DATA;
@@ -30,7 +31,7 @@ void Send_Data(uint8_t data_type)
   temp[9] = end1.led_bright;
   temp[10] = end1.led_per;
   temp[11] = end1.led_state;
-  HAL_UART_Transmit(&huart1, temp, 12, 10);
+  HAL_UART_Transmit(&huart1, temp, 12, 200);
 }
 void Hand_Recbuf(uint8_t *rec)
 {
@@ -38,34 +39,46 @@ void Hand_Recbuf(uint8_t *rec)
   {
     if (MacCmp(rec))
     {
-      
-      if(*(rec+8)==SETBRIGHT)    //设置亮度
+
+      if (*(rec + 8) == SETBRIGHT) //设置亮度
       {
-        end1.led_bright = *(rec+9);
+        end1.led_bright = *(rec + 9);
         Write_Pwm();
       }
-      else if(*(rec+8)==SETPROPORTION)    //设置比例
+      else if (*(rec + 8) == SETPROPORTION) //设置比例
       {
-        end1.led_per = *(rec+10);
-        Write_Pwm();
-      } 
-      else if(*(rec+8)==SETON)  //设置开关
-      {
-        end1.led_state = *(rec+11);
+        end1.led_per = *(rec + 10);
         Write_Pwm();
       }
-      else if(*(rec+8)==READDATA)    //读取数据
+      else if (*(rec + 8) == SETON) //设置开关
+      {
+        end1.led_state = *(rec + 11);
+        if (end1.led_state == 0)
+        {
+          __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, (end1.led_bright * (end1.led_per / 100.00)));
+          __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, (end1.led_bright * ((100 - end1.led_per) / 100.00)));
+        }
+        else if (end1.led_state == 1)
+        {
+          __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
+          __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
+        }
+        Write_Pwm();
+      }
+      else if (*(rec + 8) == READDATA) //读取数据
       {
         Send_Data(READDATA);
       }
     }
   }
-  else if((*rec == 0xFF)&&*(rec+1)== 0xAA)
+  else if ((*rec == 0xFF) && *(rec + 1) == 0xAA)
   {
-      Send_Data(JOINNET);
-      end1.online = 1;
+    Send_Data(JOINNET);
+    delay_ms(1000);
+    Send_Data(JOINNET);
+    end1.online = 1;
   }
-    memset(rec,0,20);
+  memset(rec, 0, 20);
 }
 
 uint8_t MacCmp(uint8_t *rec)
@@ -82,17 +95,54 @@ uint8_t MacCmp(uint8_t *rec)
 }
 void Write_Pwm()
 {
-    uint32_t temp;
-    uint32_t pagerror;
-	FLASH_EraseInitTypeDef save_dat;
-    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, (end1.led_bright*(end1.led_per/100.00)));
-    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, (end1.led_bright*((100-end1.led_per)/100.00)));
-	temp = end1.led_bright+end1.led_per*256+end1.led_state*256*256;
-	save_dat.TypeErase = FLASH_TYPEERASE_PAGES;
-	save_dat.PageAddress = END_DATA;
-	save_dat.NbPages = 1;
-	HAL_FLASH_Unlock();
-	HAL_FLASHEx_Erase(&save_dat,&pagerror);
-	HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,save_dat.PageAddress,temp);		
-	HAL_FLASH_Lock();
+  uint32_t temp;
+  uint32_t pagerror;
+  FLASH_EraseInitTypeDef save_dat;
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, (end1.led_bright * (end1.led_per / 100.00)));
+  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, (end1.led_bright * ((100 - end1.led_per) / 100.00)));
+  temp = end1.led_bright + end1.led_per * 256 + end1.led_state * 256 * 256;
+  save_dat.TypeErase = FLASH_TYPEERASE_PAGES;
+  save_dat.PageAddress = END_DATA;
+  save_dat.NbPages = 1;
+  HAL_FLASH_Unlock();
+  HAL_FLASHEx_Erase(&save_dat, &pagerror);
+  HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, save_dat.PageAddress, temp);
+  HAL_FLASH_Lock();
+}
+void delay_ms(int time)
+{
+  int i = 0;
+  while (time--)
+  {
+    i = 12000;
+    while (i--);
+    
+  }
+}
+void Key_Scan(void)
+{
+  key_flag = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10);
+  if (key_flag == 0)
+  {
+    do
+    {
+      key_flag = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10);
+    } while (key_flag == 0);
+
+    if (end1.led_state == 0)
+    {
+      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, (end1.led_bright * (end1.led_per / 100.00)));
+      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, (end1.led_bright * ((100 - end1.led_per) / 100.00)));
+      
+      end1.led_state = 1;
+    }
+    else if (end1.led_state == 1)
+    {
+
+      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
+      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
+      end1.led_state = 0;
+    }
+    Send_Data(SETON);
+  }
 }

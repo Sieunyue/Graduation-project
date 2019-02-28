@@ -70,7 +70,6 @@
 uint8_t msg_buf[20];
 uint8_t msg_num;
 extern End_Device end1;
-uint8_t key_flag;
 extern UART_HandleTypeDef huart1;
 /* USER CODE END PV */
 
@@ -82,43 +81,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void delay_ms(int time)
-{
-  int i = 0;
-  while (time--)
-  {
-    i = 12000;
-    while (i--);
-    
-  }
-}
-void Key_Scan(void)
-{
-  key_flag = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10);
-  if (key_flag == 0)
-  {
-    do
-    {
-      key_flag = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10);
-    } while (key_flag == 0);
-
-    if (end1.led_state == 0)
-    {
-      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, (end1.led_bright * (end1.led_per / 100.00)));
-      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, (end1.led_bright * ((100 - end1.led_per) / 100.00)));
-      
-      end1.led_state = 1;
-    }
-    else if (end1.led_state == 1)
-    {
-
-      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
-      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
-      end1.led_state = 0;
-    }
-    Send_Data(SETON);
-  }
-}
 //void send(void)
 //{
 //  HAL_UART_Receive_IT(&huart1,rec_buf,6);
@@ -159,6 +121,8 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   //  send();
+	Send_Data(0xff);
+	Send_Data(0xff);
   Init_Device();
   HAL_UART_Receive_IT(&huart1, msg_buf, 20);
   huart1.Instance->ICR|=0x10;

@@ -437,6 +437,11 @@
               <FileType>1</FileType>
               <FilePath>..\Src\onenet.c</FilePath>
             </File>
+            <File>
+              <FileName>end.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\end.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
