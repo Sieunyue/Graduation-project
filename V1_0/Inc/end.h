@@ -20,6 +20,8 @@ typedef struct
     uint8_t led_state;
     uint8_t *mac_addr;
     uint8_t short_addr[2];
+    uint8_t cool_pwm;
+    uint8_t warm_pwm;
 }End_Device;
 
 
@@ -30,5 +32,5 @@ void Write_Pwm(void);
 uint8_t MacCmp(uint8_t *rec);
 void Key_Scan(void);
 void delay_ms(int time);
-
+void HexToInt(void);
 #endif

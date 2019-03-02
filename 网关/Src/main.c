@@ -196,10 +196,7 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-    if (Head.online_state == 0)
-    {
-        
-    }
+
     tcounter++;
 }
 /* USER CODE END 4 */

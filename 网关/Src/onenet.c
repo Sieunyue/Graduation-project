@@ -26,7 +26,6 @@ void SendValueToOnenet(const char *data, int value)
     EdpPacket *send_pkg;
     cJSON *json_data = cJSON_CreateObject();
     cJSON_AddItemToObject(json_data, data, cJSON_CreateNumber(value));
-    memset(rxbuf2, 0, sizeof(rxbuf2));
     send_pkg = PacketSavedataJson(NULL, json_data, kTypeSimpleJsonWithoutTime, 0);
     HAL_UART_Transmit(&huart2, (send_pkg->_data), send_pkg->_write_pos, 100);
     DeleteBuffer(&send_pkg);
@@ -74,7 +73,7 @@ void ConnectDerive()
  * 参数：   recbuf      返回数据的数组 
  * 返回值： 无
  */
-void IsOnenetCmd(uint8_t *recbuf)
+void IsOnenetCmd(const uint8_t *recbuf)
 {
     const uint8_t *mtype = recbuf;
     switch (*mtype)
@@ -101,58 +100,26 @@ void IsOnenetCmd(uint8_t *recbuf)
  * 参数：   rec_buf      返回数据的数组 
  * 返回值： 无
  */
-void HandleCmd(uint8_t *rec_buf)
+void HandleCmd(const uint8_t *rec_buf)
 {
-    //    uint8_t cmd_id[2];
-    //    uint8_t *temp = rec_buf;
-    //    uint8_t i = 0;
-    //    uint8_t valu[2]={0x00,0x00};
-    //    while (*temp != '{')
-    //    {
-    //        temp++;
-    //    }
-    //    temp++;
-    //    while (*temp != '}')
-    //    {
-    //        cmd_id[i++] = *temp++;
-    //    }
-    //    temp++;
-    //    i=0;
-    //    while(*temp != '\0')
-    //    {
-    //        valu[i++] = *temp++;
-    //    }
-    //	if(valu[1] == 0x00)
-    //	{
-    //		valu[1]=valu[0];
-    //		valu[0]=0x30;
-    //	}
-    //    if (cmd_id[0] == 's' && cmd_id[1] == 't')
-    //    {
-    //        led1.st = *temp - 48;
-    //        SendDataToOnenet("statew", led1.st);
-    //        PushCmdToEnd(&led1,WNF, led1.st, led1.st);
-    //    }
-    //    else if (cmd_id[0] == 'b' && cmd_id[1] == 'r')
-    //    {
-    //        led1.br = ((valu[0]-48)*10+(valu[1]-48));
-    //		led1.bc = led1.br*(led1.per/100.00);
-    //        led1.bw = led1.br*((100-led1.per)/100.00);
-    //        led1.bc= led1.bc<=0x01? 0x01:led1.bc;
-    //        led1.bw= led1.bw<=0x01? 0x01:led1.bw;
-    //			SendDataToOnenet("bright", led1.br);
-    //        PushCmdToEnd(&led1,WBR,led1.br,((int)led1.per));
-    //    }
-    //    else if (cmd_id[0] == 'p' && cmd_id[1] == 'r')
-    //    {
-    //        led1.per =(valu[0]-48)*10+(valu[1]-48);
-    //        led1.bc = led1.br*(led1.per/100.00);
-    //        led1.bw = led1.br*((100-led1.per)/100.00);
-    //        led1.bc= led1.bc<=0x01? 0x01:led1.bc;
-    //        led1.bw= led1.bw<=0x01? 0x01:led1.bw;
-    //		SendDataToOnenet("per", (int)led1.per);
-    //        PushCmdToEnd(&led1,WPR, led1.br,(int) led1.per);
-    //    }
+    const uint8_t *prec = rec_buf + 44;
+		//uint8_t dev_index;
+    uint8_t temp_msg[16];
+    temp_msg[0] = 0xFC;
+    temp_msg[1] = 0x0E;
+    temp_msg[2] = 0x01;
+    temp_msg[3] = 0x01;
+    StringToHex(prec,12,temp_msg+4);
+    // dev_index = FindDevMac(temp_msg+4);
+    // Head.save_end[dev_index]->bright = temp_msg[13];
+    // Head.save_end[dev_index]->proportion = temp_msg[14];
+    // Head.save_end[dev_index]->on_state= temp_msg[15];
+    // SendStringToOnenet(Head.save_end[dev_index]);
+    HAL_UART_Transmit(&huart1,(uint8_t*)temp_msg,16,10);
+
+    
+    
+
 }
 void SendPing()
 {
@@ -160,6 +127,26 @@ void SendPing()
     send_pkg = PacketPing();
     HAL_UART_Transmit(&huart2, (send_pkg->_data), send_pkg->_write_pos, 10);
     DeleteBuffer(&send_pkg);
+}
+void StringToHex(const uint8_t *str ,uint32_t num,uint8_t *hex)
+{
+    for(int i = 0;i< num ; i++)
+    {
+        if(*(str+i*2)>=65)
+        {
+            *(hex+i) = (*(str+i*2)-55)*16;
+        }else
+        {
+            *(hex+i) = (*(str+i*2)-48)*16;
+        }
+        if (*(str+i*2+1)>=65) {
+            *(hex+i) |= (*(str+i*2+1)-55);
+        }
+        else {
+            *(hex+i) |= (*(str+i*2+1)-48);
+        }
+        
+    }
 }
 void delay_ms(uint32_t time)
 {

@@ -158,20 +158,15 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>end1</ItemText>
+          <ItemText>msg_buf</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>msg_buf</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>1</WinNumber>
           <ItemText>huart1</ItemText>
         </Ww>
         <Ww>
-          <count>4</count>
+          <count>3</count>
           <WinNumber>1</WinNumber>
           <ItemText>msg_num</ItemText>
         </Ww>

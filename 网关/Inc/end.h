@@ -8,6 +8,7 @@
 
 #define READDATA 0x01 //读取数据
 #define JOINNET 0x02  //加入网络
+#define OTHER   0x03
 typedef struct
 {
     uint8_t bright;

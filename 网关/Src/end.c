@@ -7,6 +7,7 @@ END_TypeDef *led[10];
 extern uint8_t count1;
 extern uint8_t state1;
 extern uint8_t rxbuf1[];
+
 END_Head Head;
 //void PushCmdToEnd(uint8_t num, uint8_t cmd_type, int val1 ,int val2)
 //{
@@ -60,6 +61,18 @@ void EndMsg(const uint8_t *recbuf)
             SendStringToOnenet(Head.save_end[num]);
         }
     }
+    else if (*(recbuf + 8) == READDATA)
+    {
+        uint32_t num;
+        num = FindDevMac(recbuf);
+        if (num != 11)
+        {
+            Head.save_end[num]->on_state = *(recbuf + 11);
+            Head.save_end[num]->bright = *(recbuf + 9);
+            Head.save_end[num]->proportion = *(recbuf + 10);
+            SendStringToOnenet(Head.save_end[num]);
+        }
+    }
 }
 /*
  * 函数名： EndMsg
@@ -80,7 +93,9 @@ void CreatNewDevice(const uint8_t *recbuf)
     temp->proportion = *recbuf++;
     temp->on_state = *recbuf;
     Head.end_num++;
+		SendStringToOnenet(temp);
 }
+
 /*
  * 函数名： HexsToChar
  * 功能：   将16进制数组转换成字符串
@@ -153,19 +168,20 @@ void ValueToMsg(char *msg_pkg, uint8_t *msg_id, uint8_t msg_bright, uint8_t msg_
     HexToChar(msg_porportion, temp);
     temp += 2;
     HexToChar(msg_on, temp);
-    temp+=2;
+    temp += 2;
     *temp = '\0';
 }
 uint32_t FindDevMac(const uint8_t *mac)
 {
     uint32_t k, i;
-    uint8_t *temp;
+    const uint8_t *des_mac;
     for (i = 0; i < Head.end_num; i++)
     {
-        temp = Head.save_end[i]->mac;
+
         for (k = 0; k < 8; k++)
         {
-            if (*(temp + k) != *(mac + k))
+            des_mac = Head.save_end[i]->mac + k;
+            if (*(des_mac) != *(mac + k))
             {
                 break;
             }

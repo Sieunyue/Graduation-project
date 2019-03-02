@@ -11,12 +11,12 @@ void Init_Device()
   end1.online = 0;
   end1.led_bright = *(__IO uint8_t *)end_data;
   end1.led_per = *(__IO uint8_t *)(end_data + 1);
-  end1.led_state = *(__IO uint8_t *)(end_data + 2);
   end1.mac_addr = end_mac;
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  HexToInt();
 }
 
 void Send_Data(uint8_t data_type)
@@ -55,20 +55,17 @@ void Hand_Recbuf(uint8_t *rec)
         end1.led_state = *(rec + 11);
         if (end1.led_state == 0)
         {
-          __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, (end1.led_bright * (end1.led_per / 100.00)));
-          __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, (end1.led_bright * ((100 - end1.led_per) / 100.00)));
+          __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, end1.cool_pwm);
+          __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, end1.warm_pwm);
         }
         else if (end1.led_state == 1)
         {
           __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
           __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
         }
-        Write_Pwm();
       }
-      else if (*(rec + 8) == READDATA) //读取数据
-      {
         Send_Data(READDATA);
-      }
+
     }
   }
   else if ((*rec == 0xFF) && *(rec + 1) == 0xAA)
@@ -79,6 +76,15 @@ void Hand_Recbuf(uint8_t *rec)
     end1.online = 1;
   }
   memset(rec, 0, 20);
+}
+
+void HexToInt()
+{
+    float intbright,intper;
+    intbright = (end1.led_bright/16*10)+(end1.led_bright&0x0F);
+    intper = (end1.led_per/16*10)+(end1.led_per&0x0F);
+    end1.cool_pwm = intbright * (intper/100.00);
+    end1.warm_pwm = intbright * ((100.00 - intper)/100.00);
 }
 
 uint8_t MacCmp(uint8_t *rec)
@@ -98,8 +104,11 @@ void Write_Pwm()
   uint32_t temp;
   uint32_t pagerror;
   FLASH_EraseInitTypeDef save_dat;
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, (end1.led_bright * (end1.led_per / 100.00)));
-  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, (end1.led_bright * ((100 - end1.led_per) / 100.00)));
+    HexToInt();
+    if (end1.led_state == 1) {
+        __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, end1.cool_pwm);
+        __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, end1.warm_pwm);
+    } 
   temp = end1.led_bright + end1.led_per * 256 + end1.led_state * 256 * 256;
   save_dat.TypeErase = FLASH_TYPEERASE_PAGES;
   save_dat.PageAddress = END_DATA;
@@ -131,9 +140,8 @@ void Key_Scan(void)
 
     if (end1.led_state == 0)
     {
-      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, (end1.led_bright * (end1.led_per / 100.00)));
-      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, (end1.led_bright * ((100 - end1.led_per) / 100.00)));
-      
+      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, end1.cool_pwm);
+      __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, end1.warm_pwm); 
       end1.led_state = 1;
     }
     else if (end1.led_state == 1)

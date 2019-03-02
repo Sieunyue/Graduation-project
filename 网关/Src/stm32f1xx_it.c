@@ -60,7 +60,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 uint8_t rxbuf1[50] = "";
-uint8_t rxbuf2[50] = "";
+uint8_t rxbuf2[100] = "";
 uint8_t count1 = 0;
 uint8_t count2 = 0;
 uint8_t state1 = 0x01;
@@ -308,7 +308,7 @@ void HAL_USE_IRQHandler2()
             rxbuf2[count2] = (uint8_t)(huart2.Instance->DR & (uint8_t)0x00FF);
             count2++;
         }
-        else if (state2 == 0x02)
+        else if (state2 == 0x02 && count2 <99)
         {
             rxbuf2[count2] = (uint8_t)(huart2.Instance->DR & (uint8_t)0x00FF);
             count2++;
