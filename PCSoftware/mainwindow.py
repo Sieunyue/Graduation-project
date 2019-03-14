@@ -77,9 +77,11 @@ class Ui_MainWidget(object):
         self.horizontalLayout.addWidget(self.label_4)
         self.label_11 = QtWidgets.QLabel(MainWidget)
         self.label_11.setGeometry(QtCore.QRect(310, 30, 54, 12))
+        self.label_11.setText("")
         self.label_11.setObjectName("label_11")
         self.label_12 = QtWidgets.QLabel(MainWidget)
         self.label_12.setGeometry(QtCore.QRect(460, 30, 54, 12))
+        self.label_12.setText("")
         self.label_12.setObjectName("label_12")
         self.textBrowser = QtWidgets.QTextBrowser(MainWidget)
         self.textBrowser.setGeometry(QtCore.QRect(388, 60, 211, 159))
@@ -100,7 +102,5 @@ class Ui_MainWidget(object):
         self.label_2.setText(_translate("MainWidget", "状态："))
         self.label_3.setText(_translate("MainWidget", "上传时间："))
         self.label_4.setText(_translate("MainWidget", "设备数："))
-        self.label_11.setText(_translate("MainWidget", "TextLabel"))
-        self.label_12.setText(_translate("MainWidget", "TextLabel"))
 
 

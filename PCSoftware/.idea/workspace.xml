@@ -2,7 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db41aa64-52a2-4a5b-8ea5-20f1e1a18b7a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mainwindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainwindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mainwindow.ui" beforeDir="false" afterPath="$PROJECT_DIR$/mainwindow.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../网关/MDK-ARM/123.uvguix.30468" beforeDir="false" afterPath="$PROJECT_DIR$/../网关/MDK-ARM/123.uvguix.30468" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../网关/MDK-ARM/123/123.axf" beforeDir="false" afterPath="$PROJECT_DIR$/../网关/MDK-ARM/123/123.axf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../网关/MDK-ARM/123/123.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/../网关/MDK-ARM/123/123.build_log.htm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../网关/MDK-ARM/123/123.hex" beforeDir="false" afterPath="$PROJECT_DIR$/../网关/MDK-ARM/123/123.hex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../网关/MDK-ARM/123/123.htm" beforeDir="false" afterPath="$PROJECT_DIR$/../网关/MDK-ARM/123/123.htm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../网关/MDK-ARM/123/123.map" beforeDir="false" afterPath="$PROJECT_DIR$/../网关/MDK-ARM/123/123.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../网关/MDK-ARM/123/123_123.dep" beforeDir="false" afterPath="$PROJECT_DIR$/../网关/MDK-ARM/123/123_123.dep" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../网关/MDK-ARM/123/onenet.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../网关/MDK-ARM/123/onenet.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../网关/MDK-ARM/123/onenet.o" beforeDir="false" afterPath="$PROJECT_DIR$/../网关/MDK-ARM/123/onenet.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../网关/Src/onenet.c" beforeDir="false" afterPath="$PROJECT_DIR$/../网关/Src/onenet.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,8 +27,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2002">
-              <caret line="20" column="22" selection-start-line="20" selection-start-column="22" selection-end-line="20" selection-end-column="22" />
+            <state relative-caret-position="88">
+              <caret line="68" column="29" selection-start-line="68" selection-start-column="29" selection-end-line="68" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -24,7 +36,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mainwindow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1338">
+            <state relative-caret-position="2310">
               <caret line="105" selection-start-line="105" selection-end-line="105" />
             </state>
           </provider>
@@ -50,7 +62,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="137" />
     <option name="y" value="71" />
     <option name="width" value="1092" />
@@ -148,14 +160,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.103793465" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.305794" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.19527897" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.19527897" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39914164" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -205,17 +216,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mainwindow.py">
+    <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1338">
-          <caret line="105" selection-start-line="105" selection-end-line="105" />
+        <state relative-caret-position="88">
+          <caret line="68" column="29" selection-start-line="68" selection-start-column="29" selection-end-line="68" selection-end-column="29" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
+    <entry file="file://$PROJECT_DIR$/mainwindow.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2002">
-          <caret line="20" column="22" selection-start-line="20" selection-start-column="22" selection-end-line="20" selection-end-column="22" />
+        <state relative-caret-position="2310">
+          <caret line="105" selection-start-line="105" selection-end-line="105" />
         </state>
       </provider>
     </entry>

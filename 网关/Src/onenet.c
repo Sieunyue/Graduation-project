@@ -66,6 +66,7 @@ void ConnectDerive()
         delay_ms(200);
     }
     DeleteBuffer(&send_pkg);
+    SendValueToOnenet("Online_Device", Head.end_num);
 }
 /*
  * 函数名： IsOnenetCom
