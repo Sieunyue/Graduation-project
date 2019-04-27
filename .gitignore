@@ -1,0 +1,8 @@
+.pdf
+.code-workspace
+.mxproject
+.ioc
+.vscode
+.idea
+__pycache__
+*.pdf

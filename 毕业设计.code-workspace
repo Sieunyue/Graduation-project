@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "V1_0"
+		},
+		{
+			"path": "网关"
+		}
+	],
+	"settings": {
+		"C_Cpp.default.cStandard": "c11",
+	}
+}
