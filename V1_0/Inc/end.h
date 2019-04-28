@@ -2,30 +2,43 @@
 #define __END_H
 #include "stm32f0xx_hal.h"
 
-#define END_DATA                    0x08003c00                          
-#define SETBRIGHT                   0x10                                
-#define SETPROPORTION               0x11                                
-#define SETON                       0x12                                
-
-#define READDATA                    0x01                                
-#define JOINNET                     0x02                                
-
-
-typedef struct 
+typedef enum
 {
-    /* data */  
-    uint8_t online;
-    uint8_t led_bright;
-    uint8_t led_per;
-    uint8_t led_state;
-    uint8_t *mac_addr;
-    uint8_t short_addr[2];
-    uint8_t cool_pwm;
-    uint8_t warm_pwm;
-}End_Device;
+    false = 0,
+		true = 1
+}bool;
 
+typedef enum 
+{
+    Dev_Init,
+    Dev_JoinNet,
+    Dev_Run
+}DevState_e;
+typedef struct
+{
+    uint8_t EndMac[8];
+    uint32_t FlashAddr;
+    uint8_t LedBright;
+    bool LedOn;
+    uint8_t LedPer;
+} EndParameter_t;
 
+typedef struct
+{
+    bool IsJoinNet;
+    bool KeyFlag;
+    EndParameter_t EndParameter;
+    // void (*Join_Net)(void);
+    void (*Start_Led)(void);
+    // void (*Read_Flash)(void);
+    // void (*Write_Flash)(void);
+    void (*Send)(uint8_t data_type);
+    void (*Process)(void);
+
+} EndDevice_t;
+extern EndDevice_t EndDev;
 void Init_Device(void);
+void End_Init(void);
 void Send_Data(uint8_t data_type);
 void Hand_Recbuf(uint8_t *rec);
 void Write_Pwm(void);

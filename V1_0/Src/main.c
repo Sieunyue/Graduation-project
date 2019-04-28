@@ -48,6 +48,8 @@
 /* USER CODE BEGIN Includes */
 #include "end.h"
 #include "string.h"
+#include "config.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -67,17 +69,24 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint8_t msg_buf[20];
-uint8_t msg_num;
-extern End_Device end1;
-extern UART_HandleTypeDef huart1;
 extern uint32_t TimeTick;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+static void Usart_Send(uint8_t *buff, uint8_t size)
+{
+    HAL_UART_Transmit(&Usart1.huart, buff, size, 10);
+}
+static void NextRx()
+{
+    memset(Usart1.UsartBuff, 0, sizeof(Usart1.UsartBuff));
+    Usart1.len = 0;
+    __HAL_UART_ENABLE_IT(&Usart1.huart, UART_IT_RXNE);
+    __HAL_UART_CLEAR_FLAG(&Usart1.huart, UART_CLEAR_IDLEF);
+    Usart1.UsartState = UsartReady;
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -96,64 +105,101 @@ void SystemClock_Config(void);
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
+    /* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+    /* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+    /* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+    HAL_Init();
 
-  /* USER CODE BEGIN Init */
+    /* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+    /* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+    /* Configure the system clock */
+    SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+    /* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+    /* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_TIM3_Init();
-  MX_USART1_UART_Init();
-  /* USER CODE BEGIN 2 */
+    /* Initialize all configured peripherals */
+    MX_GPIO_Init();
+    MX_TIM3_Init();
+    MX_USART1_UART_Init();
+    /* USER CODE BEGIN 2 */
+    DevState_e DevState = Dev_Init;
+    End_Init();
     //  send();
-    Send_Data(0xff);
-    Send_Data(0xff);
-    Init_Device();
-    HAL_UART_Receive_IT(&huart1, msg_buf, 20);
-    huart1.Instance->ICR |= 0x10;
-  /* USER CODE END 2 */
+    // Send_Data(0xff);
+    // Send_Data(0xff);
+    // Init_Device();
+    // HAL_UART_Receive_IT(&huart1, msg_buf, 20);
+    // huart1.Instance->ICR |= 0x10;
+    /* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+    /* Infinite loop */
+    /* USER CODE BEGIN WHILE */
     while (1)
-    {   if(end1.online == 0 && (TimeTick%5000 <100))
     {
-        Send_Data(JOINNET);
-    }
-    
-        if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE))
+        EndDev.Process();
+        switch (DevState)
         {
-            CLEAR_BIT(huart1.Instance->CR1, (USART_CR1_RXNEIE | USART_CR1_PEIE));
-            CLEAR_BIT(huart1.Instance->CR3, USART_CR3_EIE);
-            Hand_Recbuf(msg_buf);
-            huart1.RxState = HAL_UART_STATE_READY;
-            msg_num = 0;
-            HAL_UART_Receive_IT(&huart1, msg_buf, 20);
-            huart1.Instance->ICR |= 0x10;
+        case Dev_Init:
+            Usart1.huart = huart1;
+            Usart1.Send = Usart_Send;
+            Usart1.Rx = NextRx;
+            Usart1.Rx();
+            DevState = Dev_JoinNet;
+            break;
+        case Dev_JoinNet:
+            if (GETNET())
+            {
+                if ((TimeTick % 10000) <= 300)
+                {
+                    EndDev.Send(JOINNET);
+                }
+            }
+            DevState = Dev_Run;
+            break;
+        case Dev_Run:
+            if (EndDev.IsJoinNet == false)
+            {
+                DevState = Dev_JoinNet;
+            }
+            break;
+        default:
+            DevState = Dev_Init;
+            break;
         }
-        Key_Scan();
-    
-    /* USER CODE END WHILE */
+        if (__HAL_UART_GET_FLAG(&Usart1.huart, UART_FLAG_IDLE))
+        {
+            Usart1.UsartState = UsartRxDone;
+        }
+        //     if(end1.online == 0 && (TimeTick%5000 <100))
+        // {
+        //     Send_Data(JOINNET);
+        // }
 
-    /* USER CODE BEGIN 3 */
+        //     if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE))
+        //     {
+        //         CLEAR_BIT(huart1.Instance->CR1, (USART_CR1_RXNEIE | USART_CR1_PEIE));
+        //         CLEAR_BIT(huart1.Instance->CR3, USART_CR3_EIE);
+        //         Hand_Recbuf(msg_buf);
+        //         huart1.RxState = HAL_UART_STATE_READY;
+        //         msg_num = 0;
+        //         HAL_UART_Receive_IT(&huart1, msg_buf, 20);
+        //         huart1.Instance->ICR |= 0x10;
+        //     }
+        //     Key_Scan();
+
+        /* USER CODE END WHILE */
+
+        /* USER CODE BEGIN 3 */
     }
-  /* USER CODE END 3 */
+    /* USER CODE END 3 */
 }
 
 /**
@@ -162,48 +208,47 @@ int main(void)
   */
 void SystemClock_Config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+    RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
-  /**Initializes the CPU, AHB and APB busses clocks 
+    /**Initializes the CPU, AHB and APB busses clocks 
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL12;
-  RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV1;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /**Initializes the CPU, AHB and APB busses clocks 
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+    RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL12;
+    RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV1;
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    /**Initializes the CPU, AHB and APB busses clocks 
   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1;
+    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
-  PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_SYSCLK;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-  {
-    Error_Handler();
-  }
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+    PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_SYSCLK;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    {
+        Error_Handler();
+    }
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-    HAL_UART_Receive_IT(&huart1, msg_buf, 20);
-}
+//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+//{
+//    HAL_UART_Receive_IT(&huart1, msg_buf, 20);
+//}
 
 /* USER CODE END 4 */
 
@@ -213,13 +258,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   */
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
+    /* USER CODE BEGIN Error_Handler_Debug */
     /* User can add his own implementation to report the HAL error return state */
 
-  /* USER CODE END Error_Handler_Debug */
+    /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
@@ -228,11 +273,11 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(char *file, uint32_t line)
-{ 
-  /* USER CODE BEGIN 6 */
+{
+    /* USER CODE BEGIN 6 */
     /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
+    /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
 

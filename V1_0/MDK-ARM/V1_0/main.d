@@ -35,3 +35,4 @@ v1_0\main.o: ../Inc/usart.h
 v1_0\main.o: ../Inc/gpio.h
 v1_0\main.o: ../Inc/end.h
 v1_0\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+v1_0\main.o: ../Inc/config.h
