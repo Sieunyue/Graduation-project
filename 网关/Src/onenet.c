@@ -111,11 +111,6 @@ void HandleCmd(const uint8_t *rec_buf)
     temp_msg[2] = 0x01;
     temp_msg[3] = 0x01;
     StringToHex(prec,12,temp_msg+4);
-    // dev_index = FindDevMac(temp_msg+4);
-    // Head.save_end[dev_index]->bright = temp_msg[13];
-    // Head.save_end[dev_index]->proportion = temp_msg[14];
-    // Head.save_end[dev_index]->on_state= temp_msg[15];
-    // SendStringToOnenet(Head.save_end[dev_index]);
     HAL_UART_Transmit(&huart1,(uint8_t*)temp_msg,16,10);
 }
 void SendPing()

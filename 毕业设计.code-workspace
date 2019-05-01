@@ -1,12 +1,15 @@
 {
 	"folders": [
-		{
-			"path": "V1_0"
-		},
-		{
-			"path": "网关"
-		}
-	],
+        {
+            "path": "V1_0"
+        },
+        {
+            "path": "网关"
+        },
+        {
+            "path": "PCSoftware"
+        }
+    ],
 	"settings": {
 		"C_Cpp.default.cStandard": "c11",
 	}

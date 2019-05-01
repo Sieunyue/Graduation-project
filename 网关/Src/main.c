@@ -76,6 +76,8 @@ extern uint8_t state2, state1;
 extern uint8_t count2;
 int tcounter = 0;
 extern END_Head Head;
+extern TimeTick;
+DevState_e DevState=DevInit;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

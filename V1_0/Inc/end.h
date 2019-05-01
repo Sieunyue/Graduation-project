@@ -5,7 +5,7 @@
 typedef enum
 {
     false = 0,
-		true = 1
+	true = 1
 }bool;
 
 typedef enum 
@@ -26,12 +26,12 @@ typedef struct
 typedef struct
 {
     bool IsJoinNet;
-    bool KeyFlag;
     EndParameter_t EndParameter;
     // void (*Join_Net)(void);
     void (*Start_Led)(void);
     // void (*Read_Flash)(void);
     // void (*Write_Flash)(void);
+    void (*Get_Mac)(void);
     void (*Send)(uint8_t data_type);
     void (*Process)(void);
 
@@ -46,4 +46,5 @@ uint8_t MacCmp(uint8_t *rec);
 void Key_Scan(void);
 void delay_ms(int time);
 void HexToInt(void);
+void KeyProcess(void);
 #endif

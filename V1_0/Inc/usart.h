@@ -47,7 +47,12 @@
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
+typedef enum
+{
+    RxReady,
+    RxBusy,
+    RxDone
+}UsartState_e;
 /* USER CODE END Includes */
 
 extern UART_HandleTypeDef huart1;
@@ -59,23 +64,16 @@ extern UART_HandleTypeDef huart1;
 void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-typedef enum
-{
-    UsartReady,
-    UsartBusy,
-    UsartRxDone
-}UsartState_t;
-
 typedef struct 
 {
-    UART_HandleTypeDef huart;
+    UART_HandleTypeDef* huart;
     uint8_t UsartBuff[50];
     uint8_t len;
-    UsartState_t UsartState;
-    void(*Send)(uint8_t* buff,uint8_t size);
-    void(*Rx)(void);
+    UsartState_e UsartState;
+    void (*Send)(uint8_t *buff, uint8_t size);
+    void (*Rx)(void);
 }Usart_t;
-extern Usart_t Usart1;
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

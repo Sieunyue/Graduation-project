@@ -65,6 +65,7 @@ uint8_t count1 = 0;
 uint8_t count2 = 0;
 uint8_t state1 = 0x01;
 uint8_t state2 = 0x01;
+uint32_t TimeTick;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -207,7 +208,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
     /* USER CODE BEGIN SysTick_IRQn 0 */
-
+    TimeTick++;
     /* USER CODE END SysTick_IRQn 0 */
     HAL_IncTick();
     /* USER CODE BEGIN SysTick_IRQn 1 */

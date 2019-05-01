@@ -52,7 +52,12 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+typedef enum
+{
+    DevInit,
+    DevJoin,
+    DevRun
+}DevState_e;
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

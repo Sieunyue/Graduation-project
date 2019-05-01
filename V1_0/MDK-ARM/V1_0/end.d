@@ -30,8 +30,9 @@ v1_0\end.o: ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim.h
 v1_0\end.o: ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim_ex.h
 v1_0\end.o: ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h
 v1_0\end.o: ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h
+v1_0\end.o: ../Inc/config.h
+v1_0\end.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 v1_0\end.o: ../Inc/tim.h
 v1_0\end.o: ../Inc/main.h
-v1_0\end.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 v1_0\end.o: ../Inc/usart.h
-v1_0\end.o: ../Inc/config.h
+v1_0\end.o: ../Inc/gpio.h

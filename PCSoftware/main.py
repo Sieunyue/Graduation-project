@@ -122,7 +122,8 @@ class Smart_Light(QWidget,Ui_MainWidget):
         dev_name = list(dev_dict.keys())
         mac = dev_name[currentrow]
         dev_dict[mac] = str(self.dial.value()).zfill(2)+dev_dict[mac][2:6]
-        cmd_msg = mac+'10'+dev_dict[mac]
+        cmd_msg = '10'+mac+dev_dict[mac]
+        print(dev_dict[mac])
         print(cmd_msg)
         response = requests.post(url, cmd_msg, headers=head)
         self.textBrowser.append(response.text)
@@ -134,7 +135,7 @@ class Smart_Light(QWidget,Ui_MainWidget):
         dev_name = list(dev_dict.keys())
         mac = dev_name[currentrow]
         dev_dict[mac] = dev_dict[mac][0:2]+str(self.dial_2.value()).zfill(2)+dev_dict[mac][4:6]
-        cmd_msg = mac+'11'+dev_dict[mac]
+        cmd_msg = '11'+mac+dev_dict[mac]
         print(cmd_msg)
         response = requests.post(url, cmd_msg, headers=head)
         self.textBrowser.append(response.text)

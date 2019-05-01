@@ -88,11 +88,11 @@ uint8_t GETNET()
 {
     if(HAL_GPIO_ReadPin(GPIOA,NET_Pin)==GPIO_PIN_SET)
     {
-        return 1;
+        return 0;
     }
     else
     {
-        return 0;
+        return 1;
     }
     
 }
