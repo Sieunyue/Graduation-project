@@ -61,6 +61,24 @@ void MX_USART1_UART_Init(void);
 void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+typedef enum
+{
+    RxReady,
+    RxBusy,
+    RxDone
+}UsartState_e;
+
+typedef struct 
+{
+    UART_HandleTypeDef *huart;
+    uint8_t buff[128];
+    uint8_t len;
+    UsartState_e State;
+    void (*Send)(uint8_t *buff, uint8_t size);
+    void (*Rx)(void);
+}Usart_t;
+extern Usart_t Usart_Z;
+extern Usart_t Usart_E;
 
 /* USER CODE END Prototypes */
 

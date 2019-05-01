@@ -41,7 +41,8 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+Usart_t Usart_Z;
+Usart_t Usart_E;
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;

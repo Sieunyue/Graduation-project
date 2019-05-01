@@ -175,6 +175,10 @@ int main(void)
         if (EndDev.IsJoinNet == false) {
           DevState = Dev_JoinNet;
         }
+        else if (TimeTick % 30000==0)
+        {
+            EndDev.Send(READDATA);
+        }
         break;
       default:
         DevState = Dev_Init;

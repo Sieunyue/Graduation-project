@@ -17,40 +17,44 @@ END_Head Head;
  * 参数：   recbuf       串口缓冲区
  * 返回值： 无
  */
-void EndMsg(const uint8_t *recbuf) {
-  if (*(recbuf) == JOINNET) {
-    if (FindDevMac(recbuf) == 11) {
-      CreatNewDevice(recbuf);
+void EndMsg() {
+  if (Usart_Z.State == RxDone) {
+      const uint8_t *p_msg = Usart_Z.buff;
+    if (*(p_msg) == JOINNET) {
+      if (FindDevMac(p_msg) == 11) {
+        CreatNewDevice(p_msg);
+      }
+      uint8_t temp_msg[MsgBuffSize];
+      temp_msg[0] = 0xFC;
+      temp_msg[1] = 0x0E;
+      temp_msg[2] = 0x01;
+      temp_msg[3] = 0x01;
+      temp_msg[4] = REJOIN;
+      for (uint8_t i = 5, j = 0; i < 13; i++, j++) {
+        temp_msg[i] = Head.save_end[Head.end_num - 1]->mac[j];
+      }
+      temp_msg[13] = 0xFF;
+      temp_msg[14] = 0xFF;
+      temp_msg[15] = 0xFF;
+      HAL_UART_Transmit(&huart1, temp_msg, MsgBuffSize, 10);
+    } else if (*(p_msg) == SETON) {
+      uint32_t num;
+      num = FindDevMac(p_msg);
+      if (num != 11) {
+        Head.save_end[num]->on_state = *(p_msg + 11);
+        ETHDev.SendString(Head.save_end[num]);
+      }
+    } else if (*(p_msg) == READDATA) {
+      uint32_t num;
+      num = FindDevMac(p_msg);
+      if (num != 11) {
+        Head.save_end[num]->on_state = *(p_msg + 11);
+        Head.save_end[num]->bright = *(p_msg + 9);
+        Head.save_end[num]->proportion = *(p_msg + 10);
+        ETHDev.SendString(Head.save_end[num]);
+      }
     }
-    uint8_t temp_msg[MsgBuffSize];
-    temp_msg[0] = 0xFC;
-    temp_msg[1] = 0x0E;
-    temp_msg[2] = 0x01;
-    temp_msg[3] = 0x01;
-    temp_msg[4] = REJOIN;
-    for (uint8_t i = 5, j = 0; i < 13; i++, j++) {
-      temp_msg[i] = Head.save_end[Head.end_num - 1]->mac[j];
-    }
-    temp_msg[13] = 0xFF;
-    temp_msg[14] = 0xFF;
-    temp_msg[15] = 0xFF;
-    HAL_UART_Transmit(&huart1, temp_msg, MsgBuffSize, 10);
-  } else if (*(recbuf) == SETON) {
-    uint32_t num;
-    num = FindDevMac(recbuf);
-    if (num != 11) {
-      Head.save_end[num]->on_state = *(recbuf + 11);
-      SendStringToOnenet(Head.save_end[num]);
-    }
-  } else if (*(recbuf) == READDATA) {
-    uint32_t num;
-    num = FindDevMac(recbuf);
-    if (num != 11) {
-      Head.save_end[num]->on_state = *(recbuf + 11);
-      Head.save_end[num]->bright = *(recbuf + 9);
-      Head.save_end[num]->proportion = *(recbuf + 10);
-      SendStringToOnenet(Head.save_end[num]);
-    }
+    Usart_Z.Rx();
   }
 }
 /*
@@ -70,7 +74,7 @@ void CreatNewDevice(const uint8_t *recbuf) {
   temp->proportion = *p_mac++;
   temp->on_state = *p_mac;
   Head.end_num++;
-  SendStringToOnenet(temp);
+  ETHDev.SendString(temp);
 }
 
 /*

@@ -1,7 +1,7 @@
 #ifndef __END_H__
 #define __END_H__
 
-#include "stm32f1xx_hal.h"
+#include "main.h"
 #define SETBRIGHT 0x10      //设置亮度
 #define SETPROPORTION 0x11  //设置冷光比例
 #define SETON 0x12          //开/关
@@ -16,17 +16,19 @@ typedef struct {
   uint8_t mac[8];
 } END_TypeDef;
 typedef struct {
+  void (*Process)(void);
   uint32_t end_num;
   END_TypeDef *save_end[10];
-  uint8_t online_state;
+  bool IsNet;
 } END_Head;
 
 void PushCmdToEnd(uint8_t cmd_type, int val1, int val2);
-void EndMsg(const uint8_t *recbuf);
+void EndMsg(void);
 void CreatNewDevice(const uint8_t *recbuf);
 void HexsToChar(uint8_t *hex, uint32_t num, char *save_char);
 void HexToChar(uint8_t hex, char *save_char);
 void ValueToMsg(char *msg_pkg, uint8_t *msg_id, uint8_t msg_bright,
                 uint8_t msg_porportion, uint8_t msg_on);
 uint32_t FindDevMac(const uint8_t *msg);
+extern END_Head Head;
 #endif

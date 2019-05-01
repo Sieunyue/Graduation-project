@@ -54,10 +54,17 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 typedef enum
 {
-    DevInit,
+    false = 0,
+	true = 1
+}bool;
+
+typedef enum
+{
+    Dev_Init,
     DevJoin,
     DevRun
 }DevState_e;
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

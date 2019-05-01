@@ -26,13 +26,13 @@
 123\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 123\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 123\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+123\main.o: ../Inc/gpio.h
 123\main.o: ../Inc/tim.h
 123\main.o: ../Inc/usart.h
-123\main.o: ../Inc/gpio.h
+123\main.o: ../Inc/end.h
 123\main.o: ../Inc/onenet.h
-123\main.o: ../Inc/EdpKit.h
+123\main.o: ../Inc/EdpKit.h 
 123\main.o: ../Inc/Common.h
 123\main.o: ../Inc/cJSON.h
 123\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\time.h
-123\main.o: ../Inc/end.h
 123\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

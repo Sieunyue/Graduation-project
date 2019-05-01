@@ -67,7 +67,7 @@ void MX_USART1_UART_Init(void);
 typedef struct 
 {
     UART_HandleTypeDef* huart;
-    uint8_t UsartBuff[50];
+    uint8_t UsartBuff[64];
     uint8_t len;
     UsartState_e UsartState;
     void (*Send)(uint8_t *buff, uint8_t size);

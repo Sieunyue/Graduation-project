@@ -1,4 +1,5 @@
 123\stm32f1xx_it.o: ../Src/stm32f1xx_it.c
+123\stm32f1xx_it.o: ../Inc/stm32f1xx_it.h
 123\stm32f1xx_it.o: ../Inc/main.h
 123\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 123\stm32f1xx_it.o: ../Inc/stm32f1xx_hal_conf.h
@@ -26,9 +27,9 @@
 123\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 123\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 123\stm32f1xx_it.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
-123\stm32f1xx_it.o: ../Inc/stm32f1xx_it.h
 123\stm32f1xx_it.o: ../Inc/EdpKit.h
 123\stm32f1xx_it.o: ../Inc/Common.h
 123\stm32f1xx_it.o: ../Inc/cJSON.h
 123\stm32f1xx_it.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\time.h
 123\stm32f1xx_it.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+123\stm32f1xx_it.o: ../Inc/usart.h
