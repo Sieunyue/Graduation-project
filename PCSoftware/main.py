@@ -53,7 +53,7 @@ class Smart_Light(QWidget,Ui_MainWidget):
         self.setupUi(self)
         self.work = Thread(self.url,self.head)
         self.time = QTimer()
-        self.setStyleSheet('QWidget{background-color:rgb(255,255,255)}')
+        # self.setStyleSheet('QWidget{background-color:rgb(255,255,255)}')
         self.setWindowOpacity(1)
         msg_dict = self.get_url(self.url,self.head)
         self.label.setText("协议："+msg_dict['data']['protocol'])

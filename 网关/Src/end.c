@@ -11,12 +11,12 @@ extern uint8_t state1;
 extern uint8_t rxbuf1[];
 
 END_Head Head;
-/*
- * 函数名： EndMsg
- * 功能：   处理终端传来的消息
- * 参数：   recbuf       串口缓冲区
- * 返回值： 无
- */
+/**
+* Function:    EndMsg
+* Description:    Process node data
+* Parameter:    None
+* Return:    None
+*/
 void EndMsg() {
   if (Usart_Z.State == RxDone) {
       const uint8_t *p_msg = Usart_Z.buff;
@@ -57,12 +57,12 @@ void EndMsg() {
     Usart_Z.Rx();
   }
 }
-/*
- * 函数名： EndMsg
- * 功能：   新建一个终端设备
- * 参数：   recbuf       串口缓冲区
- * 返回值： 无
- */
+/**
+* Function:    CreatNewDevice
+* Description:    Creat a new device
+* Parameter:    recbuf     -->     array of node data     
+* Return:    None
+*/
 void CreatNewDevice(const uint8_t *recbuf) {
   const uint8_t *p_mac = recbuf + 1;
   END_TypeDef *temp = (END_TypeDef *)malloc(sizeof(END_TypeDef));
@@ -77,14 +77,14 @@ void CreatNewDevice(const uint8_t *recbuf) {
   ETHDev.SendString(temp);
 }
 
-/*
- * 函数名： HexsToChar
- * 功能：   将16进制数组转换成字符串
- * 参数：   *hex            16进制数组
- *          num             数组长度
- *          *save_char      存储字符串
- * 返回值： 无
- */
+/**
+* Function:    HexsToChar
+* Description:    Converting hex to string 
+* Parameter:    *hex        point of hex array
+*               num         size of hex
+*               *save_char  
+* Return:    None
+*/
 void HexsToChar(uint8_t *hex, uint32_t num, char *save_char) {
   for (int i = 0; i < num; i++) {
     save_char[(i * 2)] = ((*(hex + i)) / 16);
@@ -101,13 +101,12 @@ void HexsToChar(uint8_t *hex, uint32_t num, char *save_char) {
     }
   }
 }
-/*
- * 函数名： HexsToChar
- * 功能：   将16进制转换成字符串
- * 参数：   hex            16进制
- *         *save_char      存储字符串
- * 返回值： 无
- */
+/**
+* Function:    HexToChar
+* Description:    Converting a hex to string
+* Parameter:    
+* Return:    None
+*/
 void HexToChar(uint8_t hex, char *save_char) {
   save_char[0] = hex / 16;
   save_char[1] = hex & 0x0F;
@@ -122,6 +121,12 @@ void HexToChar(uint8_t hex, char *save_char) {
     save_char[1] += 55;
   }
 }
+/**
+* Function:    ValueToMsg
+* Description:    
+* Parameter:    None
+* Return:    None
+*/
 void ValueToMsg(char *msg_pkg, uint8_t *msg_id, uint8_t msg_bright,
                 uint8_t msg_porportion, uint8_t msg_on) {
   char *temp = msg_pkg + 16;
@@ -136,6 +141,12 @@ void ValueToMsg(char *msg_pkg, uint8_t *msg_id, uint8_t msg_bright,
   temp += 2;
   *temp = '\0';
 }
+/**
+* Function:    FindDevMac
+* Description:    Finding mac address for device
+* Parameter:    
+* Return:    index of device
+*/
 uint32_t FindDevMac(const uint8_t *msg) {
   uint32_t k, i;
   const uint8_t *des_mac = msg + 1;
