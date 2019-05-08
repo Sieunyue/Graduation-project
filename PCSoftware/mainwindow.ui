@@ -38,7 +38,7 @@
      <string>开关</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -70,7 +70,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -130,6 +130,19 @@
      </item>
     </layout>
    </widget>
+   <widget class="QPushButton" name="updatabtn">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>20</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>刷新</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_2">
    <property name="geometry">
@@ -169,7 +182,7 @@
      </sizepolicy>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -195,6 +208,19 @@
      </item>
     </layout>
    </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>10</y>
+      <width>54</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>设备列表</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
@@ -214,7 +240,7 @@
     <rect>
      <x>370</x>
      <y>60</y>
-     <width>36</width>
+     <width>91</width>
      <height>16</height>
     </rect>
    </property>
@@ -227,7 +253,7 @@
     <rect>
      <x>470</x>
      <y>60</y>
-     <width>60</width>
+     <width>181</width>
      <height>16</height>
     </rect>
    </property>
@@ -240,7 +266,7 @@
     <rect>
      <x>550</x>
      <y>20</y>
-     <width>48</width>
+     <width>101</width>
      <height>16</height>
     </rect>
    </property>

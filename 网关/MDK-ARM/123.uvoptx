@@ -170,6 +170,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>tcounter</ItemText>
         </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>DevState</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>

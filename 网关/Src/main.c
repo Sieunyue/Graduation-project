@@ -110,7 +110,7 @@ static void Board_Init() {
   Usart_E.Send = Usart_Send2;
   Usart_E.Rx = NextRx2;
   Usart_E.Rx();
-	Head.Process = EndMsg;
+  Head.Process = EndMsg;
   HAL_TIM_Base_Start_IT(&htim2);
 }
 /* USER CODE END PFP */
@@ -162,11 +162,10 @@ int main(void) {
   while (1) {
     /* USER CODE END WHILE */
     ETHDev.Process();
-		Head.Process();
+    Head.Process();
     switch (DevState) {
       case Dev_Init:
         DevState = DevJoin;
-
         break;
       case DevJoin:
         if (Head.IsNet == false && (TimeTick % 5000) == 0) {
@@ -178,13 +177,11 @@ int main(void) {
         if (Head.IsNet == false) {
           DevState = DevJoin;
           break;
-        }
-        if (tcounter >= 6 && Head.IsNet == true) {
+        } else if (tcounter >= 6 && Head.IsNet == true) {
           ETHDev.SendValue("Online_Device", Head.end_num);
           for (int i = 0; i < Head.end_num; i++) {
             // SendStringToOnenet(Head.save_end[i]);
           }
-
         }
         break;
       default:
