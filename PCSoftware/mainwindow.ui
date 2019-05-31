@@ -28,14 +28,14 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>210</x>
       <y>20</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>开关</string>
+     <string>关</string>
     </property>
    </widget>
    <widget class="QWidget" name="layoutWidget">
@@ -133,7 +133,7 @@
    <widget class="QPushButton" name="updatabtn">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>10</x>
       <y>20</y>
       <width>75</width>
       <height>23</height>
@@ -141,6 +141,19 @@
     </property>
     <property name="text">
      <string>刷新</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>20</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>开</string>
     </property>
    </widget>
   </widget>

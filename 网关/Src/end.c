@@ -2,6 +2,7 @@
 #include "onenet.h"
 #include "stdlib.h"
 #include "usart.h"
+#include "string.h"
 
 #define MsgBuffSize 16
 END_TypeDef *led[10];
@@ -9,7 +10,9 @@ END_TypeDef *led[10];
 extern uint8_t count1;
 extern uint8_t state1;
 extern uint8_t rxbuf1[];
-
+extern uint32_t TimeTick;
+uint8_t cmdflag;
+uint8_t enddata[16];
 END_Head Head;
 /**
 * Function:    EndMsg
@@ -54,7 +57,15 @@ void EndMsg() {
         ETHDev.SendString(Head.save_end[num]);
       }
     }
+
     Usart_Z.Rx();
+    cmdflag = 0;
+    memset(enddata,0,sizeof(enddata));
+  }
+  if(cmdflag == 1 && TimeTick%2000 == 0)
+  {
+    Usart_Z.Send((uint8_t *)enddata, 16);
+   
   }
 }
 /**
@@ -74,6 +85,7 @@ void CreatNewDevice(const uint8_t *recbuf) {
   temp->proportion = *p_mac++;
   temp->on_state = *p_mac;
   Head.end_num++;
+	ETHDev.SendValue("Online_Device",Head.end_num);
   ETHDev.SendString(temp);
 }
 

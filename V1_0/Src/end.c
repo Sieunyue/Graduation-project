@@ -144,25 +144,31 @@ static void Process() {
       switch (Usart1.UsartBuff[0]) {
         case REJOIN:
           EndDev.IsJoinNet = true;
+
+            HAL_GPIO_WritePin(GPIOA, RUN_Pin,0);
+
           break;
         case SetBright:
           EndDev.EndParameter.LedBright = Usart1.UsartBuff[9];
           Led_Set();
           Flash_Write(EndDev.EndParameter.FlashAddr);
+          HAL_GPIO_TogglePin(GPIOA, RUN_Pin);
           break;
         case SETPROPORTION:
           EndDev.EndParameter.LedPer = Usart1.UsartBuff[10];
           Led_Set();
           Flash_Write(EndDev.EndParameter.FlashAddr);
+          HAL_GPIO_TogglePin(GPIOA, RUN_Pin);
           break;
         case SETON:
-          if (EndDev.EndParameter.LedOn == true) {
+          if (Usart1.UsartBuff[11] == 0) {
             Led_Stop();
             EndDev.EndParameter.LedOn = false;
           } else {
             Led_Start();
             EndDev.EndParameter.LedOn = true;
           }
+          HAL_GPIO_TogglePin(GPIOA, RUN_Pin);
           Flash_Write(EndDev.EndParameter.FlashAddr);
           break;
       }

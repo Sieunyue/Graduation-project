@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainwindow.ui'
+# Form implementation generated from reading ui file 'mainwindow.ui',
+# licensing of 'mainwindow.ui' applies.
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created: Mon May 20 22:08:01 2019
+#      by: pyside2-uic  running on PySide2 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PySide2 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWidget(object):
     def setupUi(self, MainWidget):
@@ -17,7 +18,7 @@ class Ui_MainWidget(object):
         self.groupBox.setGeometry(QtCore.QRect(360, 100, 301, 211))
         self.groupBox.setObjectName("groupBox")
         self.pushButton = QtWidgets.QPushButton(self.groupBox)
-        self.pushButton.setGeometry(QtCore.QRect(190, 20, 75, 23))
+        self.pushButton.setGeometry(QtCore.QRect(210, 20, 75, 23))
         self.pushButton.setObjectName("pushButton")
         self.layoutWidget = QtWidgets.QWidget(self.groupBox)
         self.layoutWidget.setGeometry(QtCore.QRect(0, 90, 301, 121))
@@ -64,8 +65,11 @@ class Ui_MainWidget(object):
         self.horizontalLayout_4.addWidget(self.label_9)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
         self.updatabtn = QtWidgets.QPushButton(self.groupBox)
-        self.updatabtn.setGeometry(QtCore.QRect(40, 20, 75, 23))
+        self.updatabtn.setGeometry(QtCore.QRect(10, 20, 75, 23))
         self.updatabtn.setObjectName("updatabtn")
+        self.pushButton_2 = QtWidgets.QPushButton(self.groupBox)
+        self.pushButton_2.setGeometry(QtCore.QRect(110, 20, 75, 23))
+        self.pushButton_2.setObjectName("pushButton_2")
         self.groupBox_2 = QtWidgets.QGroupBox(MainWidget)
         self.groupBox_2.setGeometry(QtCore.QRect(10, 10, 341, 301))
         self.groupBox_2.setObjectName("groupBox_2")
@@ -112,22 +116,21 @@ class Ui_MainWidget(object):
         QtCore.QMetaObject.connectSlotsByName(MainWidget)
 
     def retranslateUi(self, MainWidget):
-        _translate = QtCore.QCoreApplication.translate
-        MainWidget.setWindowTitle(_translate("MainWidget", "Form"))
-        self.groupBox.setTitle(_translate("MainWidget", "控制"))
-        self.pushButton.setText(_translate("MainWidget", "开关"))
-        self.label_6.setText(_translate("MainWidget", "亮度"))
-        self.label_7.setText(_translate("MainWidget", "色温"))
-        self.label_8.setText(_translate("MainWidget", "0"))
-        self.label_9.setText(_translate("MainWidget", "0"))
-        self.updatabtn.setText(_translate("MainWidget", "刷新"))
-        self.groupBox_2.setTitle(_translate("MainWidget", "显示"))
-        self.label_10.setText(_translate("MainWidget", "状态："))
-        self.label_5.setText(_translate("MainWidget", "MAC地址："))
-        self.label_11.setText(_translate("MainWidget", "设备列表"))
-        self.label.setText(_translate("MainWidget", "协议："))
-        self.label_2.setText(_translate("MainWidget", "状态："))
-        self.label_3.setText(_translate("MainWidget", "上传时间："))
-        self.label_4.setText(_translate("MainWidget", "设备数："))
-
+        MainWidget.setWindowTitle(QtWidgets.QApplication.translate("MainWidget", "Form", None, -1))
+        self.groupBox.setTitle(QtWidgets.QApplication.translate("MainWidget", "控制", None, -1))
+        self.pushButton.setText(QtWidgets.QApplication.translate("MainWidget", "关", None, -1))
+        self.label_6.setText(QtWidgets.QApplication.translate("MainWidget", "亮度", None, -1))
+        self.label_7.setText(QtWidgets.QApplication.translate("MainWidget", "色温", None, -1))
+        self.label_8.setText(QtWidgets.QApplication.translate("MainWidget", "0", None, -1))
+        self.label_9.setText(QtWidgets.QApplication.translate("MainWidget", "0", None, -1))
+        self.updatabtn.setText(QtWidgets.QApplication.translate("MainWidget", "刷新", None, -1))
+        self.pushButton_2.setText(QtWidgets.QApplication.translate("MainWidget", "开", None, -1))
+        self.groupBox_2.setTitle(QtWidgets.QApplication.translate("MainWidget", "显示", None, -1))
+        self.label_10.setText(QtWidgets.QApplication.translate("MainWidget", "状态：", None, -1))
+        self.label_5.setText(QtWidgets.QApplication.translate("MainWidget", "MAC地址：", None, -1))
+        self.label_11.setText(QtWidgets.QApplication.translate("MainWidget", "设备列表", None, -1))
+        self.label.setText(QtWidgets.QApplication.translate("MainWidget", "协议：", None, -1))
+        self.label_2.setText(QtWidgets.QApplication.translate("MainWidget", "状态：", None, -1))
+        self.label_3.setText(QtWidgets.QApplication.translate("MainWidget", "上传时间：", None, -1))
+        self.label_4.setText(QtWidgets.QApplication.translate("MainWidget", "设备数：", None, -1))
 

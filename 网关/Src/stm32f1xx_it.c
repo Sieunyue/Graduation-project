@@ -68,7 +68,7 @@
 // uint8_t state1 = 0x01;
 // uint8_t state2 = 0x01;
 
-uint32_t TimeTick;
+volatile uint32_t TimeTick;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

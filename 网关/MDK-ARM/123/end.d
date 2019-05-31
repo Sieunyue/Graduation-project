@@ -34,3 +34,4 @@
 123\end.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\time.h
 123\end.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 123\end.o: ../Inc/usart.h
+123\end.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

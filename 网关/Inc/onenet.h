@@ -15,8 +15,8 @@ typedef struct
 }ETH_t;
 
 void ETH_Init(void);
-void delay_ms(uint32_t nms);
 void StringToHex(const uint8_t *str ,uint32_t num,uint8_t *hex);
+void DelayMs(uint32_t tick);
 extern ETH_t ETHDev;
 
 

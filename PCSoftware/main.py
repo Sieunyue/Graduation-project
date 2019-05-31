@@ -2,16 +2,17 @@ from mainwindow import *
 import sys
 import requests
 import json
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PySide2.QtCore import *
+from PySide2.QtGui import *
+from PySide2.QtWidgets import *
+import threading
 
 dev_num = 0
 dev_dict = {}
 
 
 class Thread(QThread):
-    trigger = pyqtSignal()
+    trigger = Signal()
     def __init__(self,url,head):
         super().__init__()
         self.url = url
@@ -68,94 +69,122 @@ class Smart_Light(QWidget,Ui_MainWidget):
         self.init_data()
         self.time.start(1000)
         self.slots()
+        self.cmdflag = True
 
 
     def init_data(self):
         global dev_num
         self.work.get_dat()
         self.label_4.setText("在线设备：" + str(dev_num))
-        if dev_num>0:
-            for i in range(dev_num):
-                self.listWidget.addItem("         设备" + str(i+1))
-            currentrow = self.listWidget.currentRow()
-            dev_name = list(dev_dict.keys())
-            state =  dev_dict[dev_name[currentrow]][4:6]
-            bright = dev_dict[dev_name[currentrow]][:2]
-            per = dev_dict[dev_name[currentrow]][2:4]
-            self.label_5.setText('MAC地址：'+dev_name[currentrow])
-            if int(state):
-                self.label_10.setText('状态：开')
-            else:
-                self.label_10.setText('状态：关')
-            self.label_8.setNum(int(bright))
-            self.label_9.setNum(int(per))
-            self.dial.setValue(int(bright))
-            self.dial_2.setValue(int(per))
+        self.listWidget.clear()
+        for i in range(dev_num):
+            self.listWidget.addItem("         设备" + str(i+1))
+        currentrow = self.listWidget.currentRow()
+        dev_name = list(dev_dict.keys())
+        state =  dev_dict[dev_name[currentrow]][4:6]
+        bright = dev_dict[dev_name[currentrow]][:2]
+        per = dev_dict[dev_name[currentrow]][2:4]
+        self.label_5.setText('MAC地址：'+dev_name[currentrow])
+        if int(state):
+            self.label_10.setText('状态：开')
+        else:
+            self.label_10.setText('状态：关')
+        self.label_8.setNum(int(bright))
+        self.label_9.setNum(int(per))
+        self.dial.setValue(int(bright))
+        self.dial_2.setValue(int(per))
 
 
     def display_data(self):
         global dev_num
         msg_dict = self.get_url(self.url, self.head)
         self.label.setText("协议：" + msg_dict['data']['protocol'])
-        print(dev_num)
         if msg_dict['data']['online'] == False:
             self.label_2.setText("状态：离线")
         else:
             self.label_2.setText("状态：在线")
-        if dev_num > 0:
-            currentrow = self.listWidget.currentRow()
-            dev_name = list(dev_dict.keys())
-            state =  dev_dict[dev_name[currentrow]][4:6]
-            bright = dev_dict[dev_name[currentrow]][:2]
-            per = dev_dict[dev_name[currentrow]][2:4]
-            self.label_5.setText('MAC地址：'+dev_name[currentrow])
-            if int(state):
-                self.label_10.setText('状态：开')
-            else:
-                self.label_10.setText('状态：关')
-            self.label_8.setNum(int(bright))
-            self.label_9.setNum(int(per))
+
+        currentrow = self.listWidget.currentRow()
+        dev_name = list(dev_dict.keys())
+        state =  dev_dict[dev_name[currentrow]][4:6]
+        bright = dev_dict[dev_name[currentrow]][:2]
+        per = dev_dict[dev_name[currentrow]][2:4]
+        self.label_5.setText('MAC地址：'+dev_name[currentrow])
+        if int(state):
+            self.label_10.setText('状态：开')
+        else:
+            self.label_10.setText('状态：关')
+        self.label_8.setNum(int(bright))
+        self.label_9.setNum(int(per))
 
 
     def set_bright(self):
-        url = 'http://api.heclouds.com/cmds?device_id=503223399'
-        head = {'api-key': '2ar=0yznUqoLTIw6t4P2fOIprog=', 'Content-Length': '14'}
-        currentrow = self.listWidget.currentRow()
-        dev_name = list(dev_dict.keys())
-        mac = dev_name[currentrow]
-        dev_dict[mac] = str(self.dial.value()).zfill(2)+dev_dict[mac][2:6]
-        cmd_msg = '10'+mac+dev_dict[mac]
-        print(dev_dict[mac])
-        print(cmd_msg)
-        response = requests.post(url, cmd_msg, headers=head)
-        self.textBrowser.append(response.text)
+        if self.cmdflag == True:
+            url = 'http://api.heclouds.com/cmds?device_id=503223399'
+            head = {'api-key': '2ar=0yznUqoLTIw6t4P2fOIprog=', 'Content-Length': '14'}
+            currentrow = self.listWidget.currentRow()
+            dev_name = list(dev_dict.keys())
+            mac = dev_name[currentrow]
+            dev_dict[mac] = str(self.dial.value()).zfill(2)+dev_dict[mac][2:6]
+            cmd_msg = '10'+mac+dev_dict[mac]
+            print(cmd_msg)
+            response = requests.post(url, cmd_msg, headers=head)
+            self.textBrowser.append(response.text)
+            self.cmdflag = False
+            ntime = threading.Timer(1,self.next_cmd)
+            ntime.start()
 
     def set_per(self):
-        url = 'http://api.heclouds.com/cmds?device_id=503223399'
-        head = {'api-key': '2ar=0yznUqoLTIw6t4P2fOIprog=', 'Content-Length': '14'}
-        currentrow = self.listWidget.currentRow()
-        dev_name = list(dev_dict.keys())
-        mac = dev_name[currentrow]
-        dev_dict[mac] = dev_dict[mac][0:2]+str(self.dial_2.value()).zfill(2)+dev_dict[mac][4:6]
-        cmd_msg = '11'+mac+dev_dict[mac]
-        print(cmd_msg)
-        response = requests.post(url, cmd_msg, headers=head)
-        self.textBrowser.append(response.text)
+        if self.cmdflag == True:
+            url = 'http://api.heclouds.com/cmds?device_id=503223399'
+            head = {'api-key': '2ar=0yznUqoLTIw6t4P2fOIprog=', 'Content-Length': '14'}
+            currentrow = self.listWidget.currentRow()
+            dev_name = list(dev_dict.keys())
+            mac = dev_name[currentrow]
+            dev_dict[mac] = dev_dict[mac][0:2]+str(self.dial_2.value()).zfill(2)+dev_dict[mac][4:6]
+            cmd_msg = '11'+mac+dev_dict[mac]
+            print(cmd_msg)
+            response = requests.post(url, cmd_msg, headers=head)
+            self.textBrowser.append(response.text)
+            self.cmdflag = False
+            ntime = threading.Timer(1,self.next_cmd)
+            ntime.start()
 
     def set_on(self):
-        url = 'http://api.heclouds.com/cmds?device_id=503223399'
-        head = {'api-key': '2ar=0yznUqoLTIw6t4P2fOIprog=', 'Content-Length': '14'}
-        currentrow = self.listWidget.currentRow()
-        dev_name = list(dev_dict.keys())
-        mac = dev_name[currentrow]
-        if self.label_10.text() == '状态：开':
+        if self.cmdflag == True:
+            print(self.cmdflag)
+            url = 'http://api.heclouds.com/cmds?device_id=503223399'
+            head = {'api-key': '2ar=0yznUqoLTIw6t4P2fOIprog=', 'Content-Length': '14'}
+            currentrow = self.listWidget.currentRow()
+            dev_name = list(dev_dict.keys())
+            mac = dev_name[currentrow]
             dev_dict[mac] = dev_dict[mac][0:4] + '00'
-        elif self.label_10.text() == '状态：关':
+            cmd_msg = '12'+mac+dev_dict[mac]
+            print(cmd_msg)
+            response = requests.post(url, cmd_msg, headers=head)
+            self.textBrowser.append(response.text)
+            self.cmdflag = False
+            ntime = threading.Timer(1,self.next_cmd)
+            ntime.start()
+
+    def set_off(self):
+        if self.cmdflag == True:
+            url = 'http://api.heclouds.com/cmds?device_id=503223399'
+            head = {'api-key': '2ar=0yznUqoLTIw6t4P2fOIprog=', 'Content-Length': '14'}
+            currentrow = self.listWidget.currentRow()
+            dev_name = list(dev_dict.keys())
+            mac = dev_name[currentrow]
             dev_dict[mac] = dev_dict[mac][0:4] + '01'
-        cmd_msg = '12'+mac+dev_dict[mac]
-        print(cmd_msg)
-        response = requests.post(url, cmd_msg, headers=head)
-        self.textBrowser.append(response.text)
+            cmd_msg = '12'+mac+dev_dict[mac]
+            print(cmd_msg)
+            response = requests.post(url, cmd_msg, headers=head)
+            self.textBrowser.append(response.text)
+            self.cmdflag = False
+            ntime = threading.Timer(1,self.next_cmd)
+            ntime.start()
+
+    def next_cmd(self):
+        self.cmdflag = True
 
     def slots(self):
         self.time.timeout.connect(self.work.start)
@@ -165,6 +194,7 @@ class Smart_Light(QWidget,Ui_MainWidget):
         self.dial_2.valueChanged.connect(self.set_per)
         self.updatabtn.clicked.connect(self.init_data)
         self.pushButton.clicked.connect(self.set_on)
+        self.pushButton_2.clicked.connect(self.set_off)
 
 
 

@@ -147,10 +147,6 @@ void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
     TimeTick++;
-    if (EndDev.IsJoinNet == true && TimeTick % 1000 == 0)
-    {
-        HAL_GPIO_TogglePin(GPIOA, RUN_Pin);
-    }
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */

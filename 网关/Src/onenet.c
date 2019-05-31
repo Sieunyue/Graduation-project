@@ -9,6 +9,11 @@ const char INFO[] = "0001";
 const char APIKey[] = "2ar=0yznUqoLTIw6t4P2fOIprog=";
 extern END_Head Head;
 extern DevState_e DevState;
+extern uint8_t enddata[16];
+extern volatile uint32_t TimeTick;
+volatile uint32_t starttick;
+extern uint8_t cmdflag;
+
 ETH_t ETHDev;
     /**
      * Function: SendValueToOnenet
@@ -25,6 +30,7 @@ static void SendValueToOnenet(const char *data, int value) {
   HAL_UART_Transmit(&huart2, (send_pkg->_data), send_pkg->_write_pos, 100);
   DeleteBuffer(&send_pkg);
   cJSON_Delete(json_data);
+  DelayMs(400);
 }
 /**
  * Function:    SendStringToOnenet
@@ -42,6 +48,7 @@ void SendStringToOnenet(END_TypeDef *end) {
   send_pkg = PacketSavedataSimpleString(NULL, msg_pkg, 0);
   HAL_UART_Transmit(&huart2, (send_pkg->_data), send_pkg->_write_pos, 100);
   DeleteBuffer(&send_pkg);
+  DelayMs(400);
 }
 /**
  * Function: ConnectOnenet
@@ -55,6 +62,7 @@ static void ConnectOnenet() {
     Usart_E.Send(send_pkg->_data, send_pkg->_write_pos);
   }
   DeleteBuffer(&send_pkg);
+  DelayMs(400);
 }
 /**
 * Function:    StringToHex
@@ -86,12 +94,13 @@ static void StringToHex(const uint8_t *str, uint32_t num, uint8_t *hex) {
 */
 static void SendToNode(const uint8_t *rec_buf) {
   const uint8_t *prec = rec_buf + 44;
-  uint8_t temp_msg[16];
+  uint8_t* temp_msg = enddata;
   temp_msg[0] = 0xFC;
   temp_msg[1] = 0x0E;
   temp_msg[2] = 0x01;
   temp_msg[3] = 0x01;
   StringToHex(prec, 12, temp_msg + 4);
+  cmdflag = 1;
   Usart_Z.Send((uint8_t *)temp_msg, 16);
 }
 
@@ -106,16 +115,16 @@ void Process() {
     const uint8_t *p_msg = Usart_E.buff;
     switch (*p_msg) {
       case CONNRESP:
+		ETHDev.SendValue("Online_Device", Head.end_num);
         Head.IsNet = true;
-				ETHDev.SendValue("Online_Device", Head.end_num);
         break;
       case CMDREQ:
         SendToNode(Usart_E.buff);
         break;
       case 0x40:
-        Head.IsNet = true;
+        Head.IsNet = false;
         DevState = DevJoin;
-        ConnectOnenet();
+        // ConnectOnenet();
         break;
       case PINGRESP:
         break;
@@ -137,4 +146,13 @@ void ETH_Init(void) {
   ETHDev.SendValue = SendValueToOnenet;
   ETHDev.SendString = SendStringToOnenet;
   ETHDev.Process = Process;
+}
+static uint32_t GetTime()
+{
+	return TimeTick;
+}
+void DelayMs(uint32_t tick)
+{
+    starttick = TimeTick;
+    while(GetTime() - starttick < tick);
 }

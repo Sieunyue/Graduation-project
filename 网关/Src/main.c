@@ -170,8 +170,8 @@ int main(void) {
       case DevJoin:
         if (Head.IsNet == false && (TimeTick % 5000) == 0) {
           ETHDev.Connect();
+					DevState = DevRun;
         }
-        DevState = DevRun;
         break;
       case DevRun:
         if (Head.IsNet == false) {
@@ -179,12 +179,13 @@ int main(void) {
           break;
         } else if (tcounter >= 6 && Head.IsNet == true) {
           ETHDev.SendValue("Online_Device", Head.end_num);
-          for (int i = 0; i < Head.end_num; i++) {
+//          for (int i = 0; i < Head.end_num; i++) {
             // SendStringToOnenet(Head.save_end[i]);
-          }
+//          }
         }
         break;
       default:
+				DevState = Dev_Init;
         break;
     }
     // if (state2 == 0x03)
